@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="zh-Hant"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>베이비 한국어｜韓語啟蒙</title>
+<style>
+:root{--bg:#fffaf3;--cd:#fff;--tx:#2b2a33;--mu:#7a7686;--ac:#ff6b6b;--ok:#2bb3a8;--bd:#eadfce;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#1c1b22;--cd:#27262f;--tx:#f3f0ea;--mu:#a29fb0;--bd:#3a3844;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#1c1b22;--cd:#27262f;--tx:#f3f0ea;--mu:#a29fb0;--bd:#3a3844;color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.5 system-ui,-apple-system,"Noto Sans TC",sans-serif;padding:14px 14px 84px;max-width:560px;margin:0 auto}
+.c{background:var(--cd);border:1px solid var(--bd);border-radius:16px;padding:14px;margin-bottom:12px}
+h2{margin:0 0 8px;font-size:18px}.mu{color:var(--mu);font-size:13px}
+button{font:inherit;border:1px solid var(--bd);background:var(--cd);color:var(--tx);border-radius:12px;padding:10px 14px;cursor:pointer}
+button.p{background:var(--ac);border-color:var(--ac);color:#fff;font-weight:700;width:100%;padding:14px}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}.row>*{flex:1}
+.big{font-size:44px;text-align:center;margin:4px 0}.ko{font-size:30px;font-weight:700;text-align:center;line-height:1.4}
+.seg{display:flex;gap:8px;align-items:center;margin:6px 0;font-size:22px;font-weight:700}.seg button{flex:none;padding:6px 10px}
+.lv{display:grid;grid-template-columns:1fr auto;gap:4px 8px;margin:8px 0}.bar{grid-column:1/3;height:8px;background:var(--bd);border-radius:4px;overflow:hidden}.bar div{height:100%;background:var(--ok)}
+.dots{display:flex;gap:6px;justify-content:center;margin-top:8px}.dots span{width:30px;height:30px;border-radius:50%;background:var(--bd);display:grid;place-items:center;font-size:12px;color:var(--mu)}.dots .on{background:var(--ok);color:#fff}
+nav{position:fixed;left:0;right:0;bottom:0;display:flex;background:var(--cd);border-top:1px solid var(--bd);padding-bottom:env(safe-area-inset-bottom,0px)}nav button{flex:1;border:0;border-radius:0;padding:14px}
+textarea,input{width:100%;font:inherit;background:var(--bg);color:var(--tx);border:1px solid var(--bd);border-radius:10px;padding:8px}
+.chip{display:inline-block;padding:4px 10px;margin:3px;border:1px solid var(--bd);border-radius:20px;cursor:pointer}
+#toast{position:fixed;top:calc(env(safe-area-inset-top,0px) + 8px);left:50%;transform:translateX(-50%);background:#333;color:#fff;padding:8px 14px;border-radius:20px;display:none;z-index:9;font-size:14px}
+</style></head><body>
+<div id="toast"></div><div id="app"></div>
+<nav><button onclick="tab='h';render()">🏠 學習</button><button onclick="tab='l';render()">🎵 歌詞/影片</button></nav>
+<script>
+const L=[
+{n:'第1關｜單字（先聽，再學像嬰兒一樣跟著念）',i:[['물','💧','水','mul'],['밥','🍚','飯','bap'],['엄마','👩','媽媽','eomma'],['아빠','👨','爸爸','appa'],['사과','🍎','蘋果','sagwa'],['우유','🥛','牛奶','uyu'],['집','🏠','家','jip'],['개','🐶','狗','gae']]},
+{n:'第2關｜短句（單字 + 動作）',i:[['물 주세요','💧🙏','請給我水','mul juseyo'],['밥 먹어요','🍚😋','吃飯','bap meogeoyo'],['엄마 사랑해요','👩❤️','我愛媽媽','eomma saranghaeyo'],['사과 좋아요','🍎👍','喜歡蘋果','sagwa joayo'],['집에 가요','🏠🚶','回家','jibe gayo'],['우유 마셔요','🥛😋','喝牛奶','uyu masyeoyo']]},
+{n:'第3關｜長句',i:[['저는 사과를 좋아해요','🙋🍎👍','我喜歡蘋果','jeoneun sagwareul joahaeyo'],['엄마와 아빠는 집에 있어요','👩👨🏠','媽媽和爸爸在家','eommawa appaneun jibe isseoyo'],['물 한 잔 주세요','💧1️⃣🙏','請給我一杯水','mul han jan juseyo'],['오늘 밥을 먹었어요','☀️🍚✅','今天吃了飯','oneul bapeul meogeosseoyo'],['우유를 마시고 학교에 가요','🥛🏫🚶','喝完牛奶去學校','uyureul masigo hakgyoe gayo']]},
+{n:'第4關｜短文',i:[['저는 민수예요. 저는 학생이에요. 우리 집에는 엄마와 아빠가 있어요. 저는 매일 아침 우유를 마셔요.','🧒🎒🏠🥛','我是民秀。我是學生。我們家有媽媽和爸爸。我每天早上喝牛奶。']]},
+{n:'第5關｜長文',i:[['오늘은 일요일이에요. 아침에 일어나서 엄마와 함께 밥을 먹었어요. 점심에는 아빠와 공원에 갔어요. 공원에서 개를 만났어요. 집에 돌아와서 사과를 먹고 일찍 잤어요.','📅🍚🌳🐶🍎😴','今天是星期日。早上起床後和媽媽一起吃了飯。中午和爸爸去了公園。在公園遇到了狗。回家後吃了蘋果，早早就睡了。']]}];
+const $=s=>document.querySelector(s),esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])),dt=(o=0)=>{const d=new Date();d.setDate(d.getDate()+o);return d.toLocaleDateString('sv')};
+let S={p:{},days:[],cap:5,nt:{d:'',c:0},cu:[]};
+try{Object.assign(S,JSON.parse(localStorage.getItem('bk')||'{}'))}catch(e){}
+const save=()=>{try{localStorage.setItem('bk',JSON.stringify(S))}catch(e){}};
+const toast=t=>{const e=$('#toast');e.textContent=t;e.style.display='block';setTimeout(()=>e.style.display='none',2200)};
+const all=()=>L.flatMap((l,li)=>l.i.map((x,k)=>({id:li+'-'+k,lv:li,ko:x[0],e:x[1],zh:x[2],r:x[3]||''}))).concat(S.cu);
+const box=x=>(S.p[x.id]||{box:0}).box;
+const unl=lv=>lv==0||lv>=L.length||all().filter(x=>x.lv==lv-1).every(x=>S.p[x.id]&&box(x)>=2);
+function streak(){let n=0,o=S.days.includes(dt())?0:-1;while(S.days.includes(dt(o))){n++;o--}return n}
+function say(t,r=.85){try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);u.lang='ko-KR';u.rate=r;const v=speechSynthesis.getVoices().find(v=>v.lang.replace('_','-').startsWith('ko'));if(v)u.voice=v;else toast('此裝置找不到韓語語音，請在系統安裝韓語 TTS');speechSynthesis.speak(u)}catch(e){toast('無法播放語音')}}
+let ZH=[],DC=null,tab='h',q=[],cur=null,reveal=false,SEG=[],lines=[],lyr='',mr,chunks=[],mine=null;
+function build(){if(S.nt.d!=dt())S.nt={d:dt(),c:0};const a=all(),t=dt();
+ const due=a.filter(x=>S.p[x.id]&&S.p[x.id].due<=t).sort((x,y)=>box(x)-box(y)).slice(0,20);
+ return due.concat(a.filter(x=>!S.p[x.id]&&unl(x.lv)).slice(0,Math.max(0,S.cap-S.nt.c)))}
+function start(){q=build();if(!q.length)return toast('今天的份量都完成了 🎉');tab='s';render()}
+function rate(g){const it=cur,first=!S.p[it.id];let p=S.p[it.id]||{box:0};if(first)S.nt.c++;
+ p.box=g?Math.min(5,p.box+g):0;p.due=dt([0,1,2,4,7,14][p.box]);S.p[it.id]=p;q.shift();
+ if(!g)q.splice(Math.min(3,q.length),0,it);
+ if(!S.days.includes(dt())&&!q.length)S.days.push(dt());save();reveal=false;mine=null;render()}
+async function rec(){const b=$('#rec');if(mr&&mr.state=='recording'){mr.stop();return}
+ try{const st=await navigator.mediaDevices.getUserMedia({audio:true});mr=new MediaRecorder(st);chunks=[];mr.ondataavailable=e=>chunks.push(e.data);
+ mr.onstop=()=>{st.getTracks().forEach(t=>t.stop());mine=URL.createObjectURL(new Blob(chunks));b.textContent='🎤 重錄';$('#mine').disabled=false};mr.start();b.textContent='⏹ 停止'}catch(e){toast('無法使用麥克風（請允許權限）')}}
+const play=()=>{if(mine)new Audio(mine).play()};
+function sayI(i,r){say(SEG[i],r)}
+let R=null,BUF='';
+const nz=s=>s.replace(/[^가-힣a-z0-9]/gi,'').normalize('NFD');
+function sim(a,b){a=nz(a);b=nz(b);if(!b)return 0;const d=Array.from({length:a.length+1},(_,i)=>[i]);for(let j=1;j<=b.length;j++)d[0][j]=j;for(let i=1;i<=a.length;i++)for(let j=1;j<=b.length;j++)d[i][j]=Math.min(d[i-1][j]+1,d[i][j-1]+1,d[i-1][j-1]+(a[i-1]==b[j-1]?0:1));return Math.max(0,Math.round(100*(1-d[a.length][b.length]/Math.max(a.length,b.length))))}
+function showR(h){const s=sim(h,cur.ko),o=$('#asrr');if(o)o.innerHTML=`聽到：<b>${esc(h)}</b><br>相似度 ${s}%　${s>=85?'😄 很準，可選「很熟」':s>=60?'🙂 接近，可選「差不多」':'😣 再聽一次再念'}`}
+function asr(){const SR=window.SpeechRecognition||window.webkitSpeechRecognition,b=$('#asr');
+ if(SR){if(R){R.stop();return}R=new SR();R.lang='ko-KR';R.onresult=e=>showR(e.results[0][0].transcript);R.onerror=e=>{$('#asrr').textContent='辨識失敗（'+e.error+'）：請確認已允許麥克風'};R.onend=()=>{R=null;b.textContent='🗣 自動辨識發音'};R.start();b.textContent='⏹ 聽取中…念完會自動停';return}
+ if(DC){if(DC.active()){DC.stop();return}BUF='';DC.start({language:'ko'}).catch(e=>toast('無法辨識：'+e.code));return}
+ toast('此瀏覽器不支援語音辨識，請用 Chrome 或三星瀏覽器開啟')}
+async function frames(f){const v=document.createElement('video');v.muted=true;v.playsInline=true;v.src=URL.createObjectURL(f);
+ await new Promise((r,j)=>{v.onloadedmetadata=r;v.onerror=j});const out=[],st=+$('#st').value||3,t0=+$('#t0').value||0,n=Math.min(8,Math.max(1,Math.floor((v.duration-t0)/st))),c=document.createElement('canvas'),w=Math.min(v.videoWidth,960);c.width=w;c.height=Math.round(v.videoHeight*w/v.videoWidth);
+ for(let i=0;i<n;i++){v.currentTime=Math.min(v.duration-.1,t0+i*st);await new Promise(r=>v.onseeked=r);c.getContext('2d').drawImage(v,0,0,c.width,c.height);out.push(await new Promise(r=>c.toBlob(r,'image/jpeg',.8)))}return out}
+async function ocr(){const fs=[...$('#fl').files],o=$('#ocs');if(!fs.length)return toast('請先選擇截圖或影片');
+ const sm=window.claude&&await claude.use('sample');if(!sm)return ocrT(fs);
+ o.textContent='讀取中…（約 10–60 秒）';
+ try{let im=[];for(const f of fs)im.push(...(f.type.startsWith('video')?await frames(f):[f]));im=im.slice(0,8);
+  const r=await sm.json('這些圖片是韓語影片的畫面。請讀出畫面中所有的韓文字幕或歌詞，依出現順序、去除重複，並各譯成繁體中文。只回傳 JSON 陣列，格式：[{"ko":"韓文","zh":"繁體中文意思"}]，不要其他文字。若沒有韓文則回傳 []。',{images:im});
+  if(!Array.isArray(r)||!r.length){o.textContent='沒有讀到韓文字幕，請換個時間點或畫面再試';return}
+  lines=r.map(x=>String(x.ko));ZH=r.map(x=>String(x.zh||''));lyr=lines.join('\n');render()}
+ catch(e){o.textContent='失敗：'+((e&&e.code)||'影片或圖片無法讀取')+'（影片失敗時請改用截圖）'}}
+async function ocrT(fs){const o=$('#ocs'),crop=$('#cp').checked;
+ try{o.textContent='載入 OCR 引擎…（第一次需連網下載韓文資料，約數十 MB）';
+  if(!window.Tesseract)await new Promise((r,j)=>{const s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/tesseract.js@5.1.1/dist/tesseract.min.js';s.onload=r;s.onerror=j;document.head.appendChild(s)});
+  let im=[];for(const f of fs)im.push(...(f.type.startsWith('video')?await frames(f):[f]));im=im.slice(0,8);
+  const w=await Tesseract.createWorker('kor',1,{logger:m=>{if(m.status=='recognizing text')o.textContent='辨識中 '+Math.round(m.progress*100)+'%'}}),seen=[];
+  for(let i=0;i<im.length;i++){const bm=await createImageBitmap(im[i]),sy=crop?Math.round(bm.height*.55):0,h=bm.height-sy,c=document.createElement('canvas');c.width=bm.width*2;c.height=h*2;c.getContext('2d').drawImage(bm,0,sy,bm.width,h,0,0,c.width,c.height);
+   const {data}=await w.recognize(c);
+   data.text.split('\n').map(s=>s.replace(/\s+/g,' ').trim()).filter(s=>(s.match(/[가-힣]/g)||[]).length>=2).forEach(s=>{if(!seen.includes(s))seen.push(s)})}
+  await w.terminate();
+  if(!seen.length){o.textContent='沒有讀到韓文，請換個時間點，或取消「只讀畫面下方」再試';return}
+  lines=seen;ZH=[];lyr=lines.join('\n');render()}
+ catch(e){o.textContent='OCR 失敗，請確認已連網，或改用截圖（'+((e&&e.message)||'未知錯誤')+'）'}}
+function addAllL(){let n=0;lines.forEach((s,i)=>{if(!S.cu.some(c=>c.ko==s)){S.cu.push({id:'c'+Date.now()+'_'+i,lv:9,ko:s,e:'🎵',zh:($('#m'+i)||{}).value||'（歌詞）',r:''});n++}});save();toast('已加入 '+n+' 句')}
+function render(){const a=$('#app');a.innerHTML=tab=='h'?home():tab=='l'?lyrics():card()}
+function home(){const a=all(),t=dt(),k=streak(),done=S.days.includes(t);
+ const dueN=a.filter(x=>S.p[x.id]&&S.p[x.id].due<=t).length,weak=a.filter(x=>S.p[x.id]&&box(x)<=1).length;
+ const dots=[6,5,4,3,2,1,0].map(o=>`<span class="${S.days.includes(dt(-o))?'on':''}">${dt(-o).slice(8)}</span>`).join('');
+ const lv=L.map((l,i)=>{const it=a.filter(x=>x.lv==i),m=it.filter(x=>S.p[x.id]&&box(x)>=2).length,u=unl(i);return `<div class="lv" style="${u?'':'opacity:.45'}"><b>${u?'':'🔒 '}${l.n}</b><span>${m}/${it.length}</span><div class="bar"><div style="width:${m/it.length*100}%"></div></div></div>`}).join('');
+ return `<div class="c"><h2>🔥 連續學習 ${k} 天</h2><div class="mu">今日新詞 ${S.nt.d==t?S.nt.c:0}/${S.cap}・待複習 ${dueN}・不熟 ${weak}</div><div class="dots">${dots}</div>
+ <div class="row" style="margin-top:10px"><button onclick="S.days.includes(dt())||S.days.push(dt());save();render();toast('打卡成功 ✅')" ${done?'disabled':''}>${done?'✅ 今日已打卡':'📅 今日打卡'}</button>
+ <label class="mu">每日新詞 <select onchange="S.cap=+this.value;save();render()">${[3,5,8,10].map(n=>`<option ${n==S.cap?'selected':''}>${n}</option>`).join('')}</select></label></div></div>
+ <button class="p" onclick="start()">▶ 開始今天的學習</button>
+ <div class="c" style="margin-top:12px"><h2>關卡進度</h2><div class="mu">每關單字熟悉度達到 2 以上才解鎖下一關；越不熟的越常出現。</div>${lv}</div>
+ <div class="c mu">做法：① 先聽 3 遍 ② 看圖猜意思 ③ 跟著念並錄音比對 ④ 自評熟悉度。熟悉度 ≥3 後，中文意思預設隱藏，只看圖與韓文。</div>`}
+function card(){if(!q.length){if(!S.days.includes(dt())){S.days.push(dt());save()}return `<div class="c"><div class="big">🎉</div><h2 style="text-align:center">今天完成了！</h2><div class="mu" style="text-align:center">已自動打卡，連續 ${streak()} 天。</div></div><button class="p" onclick="tab='h';render()">回首頁</button>`}
+ cur=q[0];const b=box(cur),hide=b>=3&&!reveal;SEG=cur.ko.split(/(?<=[.?!])\s+/);
+ const segs=SEG.map((s,i)=>`<div class="seg"><button onclick="sayI(${i},.85)">🔊</button><button onclick="sayI(${i},.55)">🐢</button><span>${esc(s)}</span></div>`).join('');
+ return `<div class="row mu"><span>剩 ${q.length} 張・熟悉度 ${b}/5</span><button style="flex:none" onclick="tab='h';render()">✕ 結束</button></div>
+ <div class="c"><div class="big">${cur.e}</div>${SEG.length>1?segs:`<div class="ko">${esc(cur.ko)}</div><div class="row" style="margin:8px 0"><button onclick="sayI(0,.85)">🔊 正常</button><button onclick="sayI(0,.55)">🐢 慢速</button></div>`}
+ ${cur.r&&b<3?`<div class="mu" style="text-align:center">${esc(cur.r)}</div>`:''}
+ <div style="text-align:center;margin-top:8px">${hide?`<button onclick="reveal=true;render()">👁 看中文意思</button>`:`<b>${esc(cur.zh)}</b>`}</div></div>
+ <div class="c"><div class="mu">② 聽 3 遍後，跟著念；長文請一句一句來。</div><div class="row" style="margin-top:8px"><button id="rec" onclick="rec()">🎤 跟讀錄音</button><button id="mine" onclick="play()" ${mine?'':'disabled'}>▶ 聽我的聲音</button></div><div class="row" style="margin-top:8px"><button id="asr" onclick="asr()">🗣 自動辨識發音</button></div><input id="typed" placeholder="備用：用鍵盤的 🎤 語音輸入韓文，按 Enter 評分" style="margin-top:8px" onchange="showR(this.value)"><div id="asrr" class="mu" style="margin-top:8px"></div></div>
+ <div class="row"><button onclick="rate(0)">😣 還不熟</button><button onclick="rate(1)">🙂 差不多</button><button onclick="rate(2)">😄 很熟</button></div>`}
+function lyrics(){
+ const ch=lyr?(()=>{const f={};lyr.split(/[\s,.!?~"'()…]+/).filter(w=>/[가-힣]/.test(w)).forEach(w=>f[w]=(f[w]||0)+1);return Object.entries(f).sort((x,y)=>y[1]-x[1]).slice(0,24)})():[];
+ return `<div class="c"><h2>🎵 歌詞／影片文字分析</h2><textarea id="ly" rows="6" placeholder="貼上韓文歌詞或字幕（一行一句）">${esc(lyr)}</textarea>
+ <div class="row" style="margin-top:8px"><button class="p" onclick="lyr=$('#ly').value;lines=lyr.split(/\\n+/).map(s=>s.trim()).filter(s=>/[가-힣]/.test(s));ZH=[];render()">分析</button></div>
+ <div class="mu" style="margin-top:10px">📷 或上傳影片／截圖，由 Claude 直接讀出畫面上的韓文字幕並翻譯（一次最多 8 個畫面）：</div><input id="fl" type="file" accept="image/*,video/*" multiple style="margin-top:6px"><div class="row" style="margin-top:6px"><label class="mu">影片起點(秒)<input id="t0" type="number" value="0"></label><label class="mu">每隔幾秒取一張<input id="st" type="number" value="3"></label></div><label class="mu" style="display:block;margin-top:8px"><input id="cp" type="checkbox" checked style="width:auto"> 只讀畫面下方（字幕位置，獨立版 OCR 用）</label><button class="p" style="margin-top:8px" onclick="ocr()">📷 讀取字幕</button><div id="ocs" class="mu"></div></div>
+ ${ch.length?`<div class="c"><h2>常見單字（點一下聽發音）</h2>${ch.map(([w,n])=>`<span class="chip" onclick="say(this.dataset.w,.7)" data-w="${esc(w)}">${esc(w)}${n>1?' ×'+n:''}</span>`).join('')}
+ <button style="width:100%;margin-top:8px" onclick="addW()">＋ 把這些單字加入學習卡</button></div>`:''}
+ ${lines.length?'<button style="width:100%;margin-bottom:8px" onclick="addAllL()">＋ 全部句子加入學習卡</button>':''}${lines.map((s,i)=>`<div class="c"><div class="seg"><button onclick="say(lines[${i}],.8)">🔊</button><span style="font-size:18px">${esc(s)}</span></div><div class="row"><input id="m${i}" value="${esc(ZH[i]||'')}" placeholder="中文意思（選填）"><button style="flex:none" onclick="addL(${i})">＋加入</button></div></div>`).join('')}`}
+function addW(){const f={};lyr.split(/[\s,.!?~"'()…]+/).filter(w=>/[가-힣]/.test(w)).forEach(w=>f[w]=(f[w]||0)+1);let n=0;
+ Object.entries(f).sort((x,y)=>y[1]-x[1]).slice(0,24).forEach(([w])=>{if(!S.cu.some(c=>c.ko==w)){S.cu.push({id:'c'+Date.now()+n++,lv:9,ko:w,e:'🎵',zh:'（歌詞單字）',r:''})}});save();toast('已加入 '+n+' 個單字')}
+function addL(i){const s=lines[i];if(S.cu.some(c=>c.ko==s))return toast('已在學習卡中');S.cu.push({id:'c'+Date.now()+i,lv:9,ko:s,e:'🎵',zh:$('#m'+i).value||'（歌詞）',r:''});save();toast('已加入')}
+try{speechSynthesis.getVoices()}catch(e){}
+try{window.claude&&claude.use('dictation').then(d=>{DC=d;if(d){d.onFinal(e=>{BUF+=e.text});d.onState(e=>{if(e.state=='idle'&&cur&&BUF)showR(BUF)})}})}catch(e){}
+render();
+</script></body></html>
